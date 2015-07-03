@@ -22,10 +22,14 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         folders = sys.argv[1:]
         for path in folders:
-            print(path)
-            for root, dirs, files in os.walk(path):
-                for file in files:
-                    hash = getHash(os.path.join(root, file))
-                    print(os.path.join(root, file), hash)
+            if os.path.exists(path):
+                print(path)
+                for root, dirs, files in os.walk(path):
+                    for file in files:
+                        hash = getHash(os.path.join(root, file))
+                        print(os.path.join(root, file), hash)
+            else:
+                print(path, " is not valid")
+                sys.exit()
     else:
         print("Usage: dupfinder.py folder [folder2 folder3...]")
