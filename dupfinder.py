@@ -4,6 +4,7 @@ import os
 import sys
 import getopt
 import hashlib
+from collections import defaultdict
 
 def getHash(path, blocksize = 65536):
     #this only works for files that fit in Python's working memory
@@ -18,20 +19,39 @@ def getHash(path, blocksize = 65536):
     file.close()
     return hasher.hexdigest()
 
+def inventoryFilesByName(path, filesByName):
+    print("inventorying ", path)
+    for directory, subdirectories, files in os.walk(path):
+        for file in files:
+            filesByName[file].append(directory)
 
-
-if __name__ == '__main__':
+def main():
     if len(sys.argv) > 1:
         folders = sys.argv[1:]
+        filesByName = defaultdict(list)
+        filesByHash = defaultdict(list)
+        print("building list of possible dupes by name")
         for path in folders:
             if os.path.exists(path):
-                print(path)
-                for root, dirs, files in os.walk(path):
-                    for file in files:
-                        hash = getHash(os.path.join(root, file))
-                        print(os.path.join(root, file), hash)
+                inventoryFilesByName(path, filesByName)
             else:
                 print(path, " is not valid")
                 sys.exit()
+        print("hashing possible dupes.  Number of files: ", len(filesByName))
+        count = 0
+        for file in filesByName:
+            count += 1
+            print(count, end='\r')
+            if len(filesByName[file]) > 1:
+                for path in filesByName[file]:
+                    filesByHash[(getHash(os.path.join(path, file)))].append(os.path.join(path, file))
+        for hash in filesByHash:
+            if len(filesByHash[hash]) > 1:
+                print(file, filesByHash[hash])
+
+
     else:
         print("Usage: dupfinder.py folder [folder2 folder3...]")
+
+if __name__ == '__main__':
+    sys.exit(main())
