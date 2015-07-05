@@ -18,6 +18,8 @@ def getHash(path, blocksize = 65536):
     file.close()
     return hasher.hexdigest()
 
+
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         folders = sys.argv[1:]
