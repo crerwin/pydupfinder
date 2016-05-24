@@ -1,15 +1,17 @@
-__author__ = 'Chris Erwin'
-
 import os
 import sys
 import getopt
 import hashlib
 from collections import defaultdict
 
-def getHash(path, blocksize = 65536):
-    #this only works for files that fit in Python's working memory
-    #instead used block reading as found here: http://www.pythoncentral.io/finding-duplicate-files-with-python/
-    #return hashlib.md5(open(path, 'rb').read()).hexdigest()
+__author__ = 'Chris Erwin'
+
+
+def getHash(path, blocksize=65536):
+    # this only works for files that fit in Python's working memory
+    # instead used block reading as found here:
+    # http://www.pythoncentral.io/finding-duplicate-files-with-python/
+    # return hashlib.md5(open(path, 'rb').read()).hexdigest()
     file = open(path, 'rb')
     hasher = hashlib.md5()
     buffer = file.read(blocksize)
@@ -19,11 +21,13 @@ def getHash(path, blocksize = 65536):
     file.close()
     return hasher.hexdigest()
 
+
 def inventoryFilesByName(path, filesByName):
     print("inventorying ", path)
     for directory, subdirectories, files in os.walk(path):
         for file in files:
             filesByName[file].append(directory)
+
 
 def main():
     if len(sys.argv) > 1:
@@ -40,6 +44,11 @@ def main():
         print("hashing possible dupes.  Number of files: ", len(filesByName))
         count = 0
         for file in filesByName:
+            if len(filesByName[file]) > 1:
+                count += 1
+        print("dupes by name: ", count)
+        count = 0
+        for file in filesByName:
             count += 1
             print(count, end='\r')
             if len(filesByName[file]) > 1:
@@ -48,8 +57,6 @@ def main():
         for hash in filesByHash:
             if len(filesByHash[hash]) > 1:
                 print(file, filesByHash[hash])
-
-
     else:
         print("Usage: dupfinder.py folder [folder2 folder3...]")
 
