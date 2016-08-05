@@ -1,6 +1,6 @@
 # Dupfinder
 
-A Python script to find duplicate files.  It catalogs all files by name, and hashes any files with the same name to confirm that they are duplicates.  Functionality will probably be added to hash everything, so you can catch duplicates that have different names.
+A Python script to find duplicate files.  It catalogs all files by name in the specified folder(s), and hashes any files with the same name to confirm that they are duplicates.  Functionality will probably be added to hash everything, so you can catch duplicates that have different names.
 
 ## Getting Started
 

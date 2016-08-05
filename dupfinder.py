@@ -35,22 +35,25 @@ def main():
         filesByName = defaultdict(list)
         filesByHash = defaultdict(list)
         print("building list of possible dupes by name")
-        for path in folders:
+
+        for path in folders:  # for each folder provided as a parameter
             if os.path.exists(path):
                 inventoryFilesByName(path, filesByName)
             else:
                 print(path, " is not valid")
                 sys.exit()
-        print("hashing possible dupes.  Number of files: ", len(filesByName))
-        count = 0
+        print("hashing possible dupes.")
+
+        dupe_count = 0
         for file in filesByName:
-            if len(filesByName[file]) > 1:
-                count += 1
-        print("dupes by name: ", count)
+            if len(filesByName[file]) > 1:  # if there's more than one file with the same name
+                dupe_count += 1
+        print("Number of duplicates by name: ", dupe_count)
+
         count = 0
         for file in filesByName:
             count += 1
-            print(count, end='\r')
+            print("hashing: " + str(count) + "/" + str(dupe_count))
             if len(filesByName[file]) > 1:
                 for path in filesByName[file]:
                     filesByHash[(getHash(os.path.join(path, file)))].append(os.path.join(path, file))
